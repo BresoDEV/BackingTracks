@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        cursor: pointer;
+    }
+    details{
+        background-color: darkgray;
+        padding: 5px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+    summary{
+        font-size: xx-large;
+    }
+    audio{
+        width: 95%;
+    }
+    li{
+        text-align: center;
+        font-size: x-large;
+    }
+</style>
+<body>
+
+</body>
+
+<script>
+
+    const body = document.body;
+
+    var musicas = [
+
+        ['Consumed', 'Heavy Metal Winner', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231198983955939398/Heavy_Metal_Winner.mp3?ex=6624f2e8&amp;is=6623a168&amp;hm=cb36972f84adc3ae7852def36c622a38a66f0e6d0820cab68443d7e300fa7ba0&amp;'],
+          
+    ];
+
+    musicas.sort();
+
+    musicas.forEach(function (elemento) {
+
+        // console.log(elemento[0][0])
+        // console.log(elemento[0][1])
+        if (document.getElementById('ul_' + elemento[0])) {
+            document.getElementById('ul_' + elemento[0]).innerHTML += `
+            <li>${elemento[1]}<br>
+        <audio   controls controlsList="download">
+         <source src="${elemento[2]}" type="audio/mpeg">
+        </audio><hr>
+    </li> `;
+
+        }
+        else {
+            body.innerHTML += `
+
+
+<details id="details_${elemento[0]}">
+<summary id="summary_${elemento[0]}">${elemento[0]}</summary>
+<ul id="ul_${elemento[0]}">
+    <li>${elemento[1]}<br>
+        <audio   controls controlsList="download">
+         <source src="${elemento[2]}" type="audio/mpeg">
+        </audio>
+    </li> <hr>
+</ul>
+</details>
+
+
+
+
+`;
+        }
+
+    });
+
+    /*
+    <h3>${elemento[0]}</h3>
+                <audio id="myAudio${index}" controls controlsList="download">
+                    <source src="${elemento[1]}" type="audio/mpeg">
+                </audio>
+                */
+
+
+</script>
+
+
+
+</html>
