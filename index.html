@@ -43,11 +43,13 @@
 </style>
 
 <body>
+    <br> <hr><br>
     <center>
         <audio id="player" controls controlsList="download">
             <source src=" " type="audio/mpeg">
         </audio>
     </center>
+    <br> <hr><br>
 </body>
 
 <script>
@@ -157,7 +159,7 @@
         if (document.getElementById('ul_' + elemento[0])) {
             document.getElementById('ul_' + elemento[0]).innerHTML += `
             <li onclick="setsource('${elemento[2]}'  )">${elemento[1]}<br>
-    </li> `;
+    </li> <hr>`;
 
         }
         else {
