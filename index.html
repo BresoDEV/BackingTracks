@@ -38,18 +38,20 @@
 
     li {
         text-align: center;
-        font-size:  large;
+        font-size: large;
     }
 </style>
 
 <body>
-    <br> <hr><br>
+    <br>
+    <hr><br>
     <center>
         <audio id="player" controls controlsList="download">
             <source src=" " type="audio/mpeg">
         </audio>
     </center>
-    <br> <hr><br>
+    <br>
+    <hr><br>
 </body>
 
 <script>
@@ -103,6 +105,10 @@
         ['AC/DC', 'You Shook Me All Night Long', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231202353617702913/You_Shook_Me_All_Night_Long.mp3?ex=6636198b&amp;is=6623a48b&amp;hm=44192840c7a43253331117ccd6e73d9ef0fd8cdcc183e684511b59271f8cad4a&amp;'],
         ['AC/DC', 'Walk All Over You', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231202352095170590/Walk_All_Over_You.mp3?ex=6624f60b&amp;is=6623a48b&amp;hm=ca06b779180ae46c0a6a2fd7f269aa59f0008352acca204b6bf1002c242b70b5&amp;'],
         ['AC/DC', 'Skies on Fire', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231202232876138517/Skies_on_Fire.mp3?ex=6624f5ee&amp;is=6623a46e&amp;hm=8a63c663102bf91495ba89af9d4f9e503e1b116791bd3efa6b87ea99b8fcaa78&amp;'],
+        ['AC/DC', 'Let There Be Rock', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232160787202099/Let_There_Be_Rock_from_Live_At_Donington.m4a?ex=6636354e&amp;is=6623c04e&amp;hm=01fee932e6e82e38a33c4a7388f08e059472c33fcb25dc77ee9df1d84630f311&amp;'],
+        ['AC/DC', 'Hard As A Rock', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232034152906792/Hard_As_A_Rock.m4a?ex=66363530&amp;is=6623c030&amp;hm=1a8be36432f58749e23915ab5ac6eb44fafad2230dec4a6133119d594d4558a4&amp;'],
+        ['AC/DC', 'Demons Fire', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231898563383527/Demon_Fire.m4a?ex=6636350f&amp;is=6623c00f&amp;hm=3d8971038a60e7a2cfb24633cdb52da20da04beb058d6902bc1bc86c2bf924b0&amp;'],
+        ['', '', ''],
         ['', '', ''],
         ['Creedence', 'Have You Ever Seen The Rain', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231200940087050320/Have_You_Ever_Seen_The_Rain.mp3?ex=6636183a&amp;is=6623a33a&amp;hm=53b04d182417990ec51e3e47412dc5020d83131358294b33623256169537c2ca&amp;'],
         ['', '', ''],
@@ -114,10 +120,13 @@
         ['', '', ''],
         ['Black Sabbath', 'I', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231201340710195282/I.mp3?ex=6624f51a&amp;is=6623a39a&amp;hm=f6017647fb8ce916ad5383d7503383b0f4851c114b5f3b68edf1d307dec1b24c&amp;'],
         ['Black Sabbath', 'Paranoid', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231201628452032542/Paranoid.mp3?ex=663618de&amp;is=6623a3de&amp;hm=e2247459b2b4146c78e2bbaffb733b7c94d343a05a75062b27db5a80fde17e99&amp;'],
+        ['Black Sabbath', 'Eletric Funeral', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231899050049576/Electric_Funeral.m4a?ex=6636350f&amp;is=6623c00f&amp;hm=01a646e1315edd11d32e9ee334868c48082bb66407e385468b4ae62b35422fc3&amp;'],
+        ['Black Sabbath', 'Childrean on the Grave', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231897527521350/Children_Of_The_Grave.m4a?ex=6625118f&amp;is=6623c00f&amp;hm=ed1408379ed7a7a83d3b94aaf146076bab1697d532258f6a9ae5b64732f25c77&amp;'],
         ['', '', ''],
         ['Led Zeppelin', 'Immigrant Song', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231201341385342976/Immigrant_Song.mp3?ex=6636189a&amp;is=6623a39a&amp;hm=f563c81161b3c83f5eae644e842fb813b78a3dff45781a71424912a76ee7c2c6&amp;'],
         ['Led Zeppelin', 'Rock and Roll', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231201799097155624/Rock_and_Roll.mp3?ex=66361907&amp;is=6623a407&amp;hm=d66a07a88f51fe638b48175637d9b9ca82319313c5c3f638b6119c26d0e4b451&amp;'],
         ['Led Zeppelin', 'Ramble On', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232285198651442/Ramble_On.m4a?ex=6636356b&amp;is=6623c06b&amp;hm=de033969ad0a62adc086c9787881e50b1e95faeab279b25ddf546649d06f6994&amp;'],
+        ['Led Zeppelin', 'Going to California', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232037688442880/Going_to_California.m4a?ex=66363530&amp;is=6623c030&amp;hm=5d67e8d2cc4648b1c7751c01d7bc7b4fed83fca1c0c466152c903bacdfbb84fe&amp;'],
         ['', '', ''],
         ['Accept', 'Lifes a Bitch', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231201342366810162/Lifes_a_Bitch.mp3?ex=6636189a&amp;is=6623a39a&amp;hm=38cee1d449687c9160801ceb87e3ad4cec9dafbb316b632a65b3b60e6811f3b8&amp;'],
         ['', '', ''],
@@ -137,6 +146,7 @@
         ['', '', ''],
         ['Iron Maiden', 'Running Free', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231201953216987257/Running_Free.mp3?ex=6636192c&amp;is=6623a42c&amp;hm=4b98b2a1a19a78072c4e6fbabc2beae2ab5c17f4ba5ae79163a22d7d8e5e0aaf&amp;'],
         ['Iron Maiden', 'Wicker Man', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231202353244536874/Wicker_Man.mp3?ex=6636198b&amp;is=6623a48b&amp;hm=da89828090770bd8d1bef85450fac989f2a942d3390c86eb860e88cc26716e60&amp;'],
+        ['Iron Maiden', 'Be Quick or Be Dead', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231900589494342/be_quick_or_be_dead.m4a?ex=66363510&amp;is=6623c010&amp;hm=ae467498e6ebf72207cf5db1acee0010cfdfd173370df0f48228ff1789042ca6&amp;'],
         ['', '', ''],
         ['The Distillers', 'Seneca Falls', 'https://cdn.discordapp.com/attachments/1231198837889044480/1231201954441728101/Seneca_Falls.mp3?ex=6636192c&amp;is=6623a42c&amp;hm=6a0eac0ad72d423878852da3fce89fcbbe184f991aef207d0eec4f37b32744d5&amp;'],
         ['', '', ''],
@@ -153,21 +163,26 @@
         ['', '', ''],
         ['ZZ Top', 'Sharp Dressed Man', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232531303497840/Sharp_Dressed_Man.mp3?ex=66251226&amp;is=6623c0a6&amp;hm=049b3fe1d40e325a2d2b2bdf80c9792504f0ee19217cd01fb3eaa29cd6ba7921&amp;'],
         ['ZZ Top', 'Planet of Woman', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232284531752960/Planet_of_Women.mp3?ex=6636356b&amp;is=6623c06b&amp;hm=2c3b10ba9d208cae10259b811f508ed1d8b694a9431b9c5d6a8ec56ddc734f9f&amp;'],
+        ['ZZ Top', 'Legs', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232160405655642/Legs.mp3?ex=662511ce&amp;is=6623c04e&amp;hm=fe7531d218efc5c260ebd2e0704be9463b0a5b0455d397fa38981cf97800c7a7&amp;'],
+        ['ZZ Top', 'La Granje', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232159533105215/La_Granje.mp3?ex=662511ce&amp;is=6623c04e&amp;hm=3c8dfbe9ad5750b930d618b52cac8c44f82fef8507beaea27245688b0e5ced34&amp;'],
+        ['ZZ Top', 'Gimme All Your Loving', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232037193646080/Gimme_All_Your_Lovin.mp3?ex=66363530&amp;is=6623c030&amp;hm=b54a5c078713e1b4704050b03f2972808bdbcb26bc09a35a68f9bc703f1b3640&amp;'],
         ['', '', ''],
         ['Kings of Leon', 'Sex on Fire', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232530896654398/Sex_On_Fire.m4a?ex=663635a6&amp;is=6623c0a6&amp;hm=f4368c73ac03670cb8d1a870c0b6fe3342b6b0b9f242ba63c2739a4e0f9aa619&amp;'],
         ['', '', ''],
         ['Ramones', 'Rock and Roll High School', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232530536071208/Rock_and_Roll_High_School_-_Ramones.m4a?ex=663635a6&amp;is=6623c0a6&amp;hm=8bf08cf2ecb510c68851f7692cafa782f4d51913da0e05036d48ff39efccb7c8&amp;'],
-        ['Ramones', '', ''],
-        ['Ramones', '', ''],
+        ['Ramones', 'Have a Nice Day', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232034920464394/HAVE_A_NICE_DAY.m4a?ex=662511b0&amp;is=6623c030&amp;hm=1fec830103829e1494324db68b30b2ebd3d7f5074212e28224c95769bcf9398d&amp;'],
         ['', '', ''],
         ['Status Quo', 'Whatever You Want', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232530179690606/Whatever_you_want.mp3?ex=663635a6&amp;is=6623c0a6&amp;hm=82201ad8289e412296bfeac147be0a3f404bc89ad5ced5f1e0a9dce5a7c72c68&amp;'],
         ['', '', ''],
         ['Queen', 'Under Pressure', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232529839689810/Under_Pressure.mp3?ex=66251226&amp;is=6623c0a6&amp;hm=81089d5b0489f287dc596f8f218631c31a218d759bc52a79fe34d21ffb8fa819&amp;'],
+        ['Queen', 'Another One Bites the Dust', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231900111081502/Another_One_Bites_the_Dust.m4a?ex=66363510&amp;is=6623c010&amp;hm=02e3ebe0796b689bf960b966c49235d9e11ba77e633632321b2ae06ae4b7c55e&amp;'],
         ['', '', ''],
         ['Tenacious D', 'The Metal', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232529541890100/the_metal.m4a?ex=663635a6&amp;is=6623c0a6&amp;hm=1be5d7a14708371606ca6d2def129f42120658ecd1f5062ce63072b45406461b&amp;'],
         ['', '', ''],
         ['Motorhead', 'The Game', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232529206476840/The_Game.mp3?ex=66251226&amp;is=6623c0a6&amp;hm=2c6e5d63dcdbe5594584c7c4deb696b2dd14de17f4bde1d09afcdc55e9ff2bba&amp;'],
         ['Motorhead', 'Hellraiser', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232287027368107/Motorhead_-_Hellraiser.m4a?ex=6636356c&amp;is=6623c06c&amp;hm=1e31ac59196167aa240a512e052dce3b35376eb06ffc7e99beb6a3f5a11d301f&amp;'],
+        ['Motorhead', 'King of Kings', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232161491980441/King_of_Kings.mp3?ex=6636354e&amp;is=6623c04e&amp;hm=711c8635d7407b1358c6d71c4c78609f00258691e730ffcf5d6c8e7b414920ed&amp;'],
+        ['Motorhead', 'Heroes', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232035281043517/Heroes.m4a?ex=662511b0&amp;is=6623c030&amp;hm=500c8c1ce57493fe494922bc07ffe378a8b04711195b59156e423b2b55bd60b2&amp;'],
         ['', '', ''],
         ['Muse', 'Panic Station', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232287383879690/MUSE.m4a?ex=6636356c&amp;is=6623c06c&amp;hm=98561ac326ab655d030d1ed06d96320a8675bf446b06c20990ff7c94560a57ee&amp;'],
         ['', '', ''],
@@ -179,9 +194,29 @@
         ['', '', ''],
         ['Def Leppard', 'Pour Some Sugar on Me', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232284880015430/Pour_Some_Sugar_On_Me.m4a?ex=6636356b&amp;is=6623c06b&amp;hm=e5d329ee853f835a48f07438feeeec4c397d53cbfe97fb92ca501d4e109da766&amp;'],
         ['', '', ''],
+        ['Ozzy', 'Hellraiser', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232284099743805/Ozzy_Ozbourne_-_Hellraiser.m4a?ex=6636356b&amp;is=6623c06b&amp;hm=dc7bd31e89f1a4b0baa2927c7557a1d773d6609193067b1e8f07540087b9f1c5&amp;'],
         ['', '', ''],
+        ['Guns n Roses', 'I Used to Love Her', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232161122615296/I_Used_To_Love_Her.m4a?ex=6636354e&amp;is=6623c04e&amp;hm=d7e5a43638ad0df3f7dc3e3ee545576bcfe5ab6f7cca7f02ba568d26949c6815&amp;'],
         ['', '', ''],
+        ['SlipKnot', 'Left Behind', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232160019513454/Left_Behind.mp3?ex=6636354e&amp;is=6623c04e&amp;hm=da5821dce371c6d576a383c79870399498089f409e7a8c18a0be750a6f2bb3bb&amp;'],
         ['', '', ''],
+        ['Blink 182', 'First Date', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232036845387816/First_Date.m4a?ex=66363530&amp;is=6623c030&amp;hm=e87faa0f39fe402c28a2fab8b73099bbf8b41228f2c5b590dee8cc21a608a776&amp;'],
+        ['', '', ''],
+        ['Kiss', 'I Love It Loud', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232036468031568/I_LOVE_IT_LOUD.m4a?ex=66363530&amp;is=6623c030&amp;hm=b305760784176ad31137468529a663f57024284d65f81aae7f5bd18df7a5f9c4&amp;'],
+        ['', '', ''],
+        ['Edward Sharpe', 'Home', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232035943612497/Home.m4a?ex=66363530&amp;is=6623c030&amp;hm=5cca38c6dfa2d8849be579c28a47cd926ce3ce5db625037d963d7d215e538199&amp;'],
+        ['', '', ''],
+        ['Toto', 'Hold The Line', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232035604135977/Hold_The_Line.mp3?ex=66363530&amp;is=6623c030&amp;hm=01d93a12a7da3cd3b2989fdda5004e4516c257cbcd033395bf5f2f2467c00cf7&amp;'],
+        ['', '', ''],
+        ['The Briggs', 'Harder to Stand', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231232034534457444/Harder_to_stand.mp3?ex=66363530&amp;is=6623c030&amp;hm=f793b16d8cd641c3f55839cdff298e3475ece7a2d2750e9fce69fd5ce8708a65&amp;'],
+        ['', '', ''],
+        ['Airbourne', 'Blackjack', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231900970913814/Blackjack.m4a?ex=66363510&amp;is=6623c010&amp;hm=3a585e52aaaab0cbcdf7041ba4ded0284182ccf0e180420f88404d7ee35c0821&amp;'],
+        ['', '', ''],
+        ['Linkin Park', 'Faint', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231899691778118/Faint.m4a?ex=66251190&amp;is=6623c010&amp;hm=134430fdf5cdb2351c50bbc4a6b1f41413a8ec997cbb86b7413acc17487d6890&amp;'],
+        ['', '', ''],
+        ['White Stripes', 'Dead Leeves on Dirty Ground', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231898198741074/Dead_Leeves.mp3?ex=6636350f&amp;is=6623c00f&amp;hm=89d8a69b5acbdfab9cccdddd492513b81503847996e9ebe4f0a569538d0a9294&amp;'],
+        ['', '', ''],
+        ['Van Halen', 'Cant Stop Loving You', 'https://cdn.discordapp.com/attachments/1231230051681435700/1231231897200361502/Cant_Stop_Loving_You.mp3?ex=6636350f&amp;is=6623c00f&amp;hm=a03c6cc9851ae7d998f0321f39ead21d6be2e699d553652c0a403c293d1fdfc1&amp;'],
         ['', '', ''],
         ['', '', ''],
         ['', '', ''],
@@ -227,7 +262,7 @@
         document.getElementById('player').src = srcs;
         window.scroll(0, 0);
         document.getElementById('player').play();
-        
+
     }
 
 </script>
