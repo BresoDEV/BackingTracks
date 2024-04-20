@@ -27,7 +27,7 @@
         color: aliceblue
     }
 
-    summary {
+    summary ,p{
         font-size: large;
         color: aliceblue
     }
@@ -39,6 +39,9 @@
     li {
         text-align: center;
         font-size: large;
+    }
+    p{
+        color: yellow;
     }
 </style>
 
@@ -52,6 +55,7 @@
     </center>
     <br>
     <hr><br>
+    <p id="contador">Oi</p>
 </body>
 
 <script>
@@ -256,7 +260,10 @@
 
     });
 
+    
 
+
+    document.getElementById('contador').innerHTML = 'Encontrado '+ musicas.length + ' musicas'
 
     function setsource(srcs) {
         document.getElementById('player').src = srcs;
