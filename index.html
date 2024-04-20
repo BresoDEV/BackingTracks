@@ -36,7 +36,11 @@
     }
 </style>
 <body>
-
+<center>
+    <audio  id="player" controls controlsList="download">
+        <source src=" " type="audio/mpeg">
+       </audio>
+</center>
 </body>
 
 <script>
@@ -145,10 +149,7 @@
         // console.log(elemento[0][1])
         if (document.getElementById('ul_' + elemento[0])) {
             document.getElementById('ul_' + elemento[0]).innerHTML += `
-            <li>${elemento[1]}<br>
-        <audio   controls controlsList="download">
-         <source src="${elemento[2]}" type="audio/mpeg">
-        </audio><hr>
+            <li onclick="setsource('${elemento[2]}'  )">${elemento[1]}<br>
     </li> `;
 
         }
@@ -159,10 +160,8 @@
 <details id="details_${elemento[0]}">
 <summary id="summary_${elemento[0]}">${elemento[0]}</summary>
 <ul id="ul_${elemento[0]}">
-    <li>${elemento[1]}<br>
-        <audio   controls controlsList="download">
-         <source src="${elemento[2]}" type="audio/mpeg">
-        </audio>
+    <li onclick="setsource( '${elemento[2]}' )">${elemento[1]}<br>
+        
     </li> <hr>
 </ul>
 </details>
@@ -175,13 +174,12 @@
 
     });
 
-    /*
-    <h3>${elemento[0]}</h3>
-                <audio id="myAudio${index}" controls controlsList="download">
-                    <source src="${elemento[1]}" type="audio/mpeg">
-                </audio>
-                */
 
+
+    function setsource(srcs)
+    {
+        document.getElementById('player').src = srcs;
+    }
 
 </script>
 
