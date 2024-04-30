@@ -2,10 +2,12 @@
 <html lang="pt-br">
 
 <head>
+    <script src="cavalo.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Breso BackTracks</title>
+    
 </head>
 <style>
     html,
@@ -16,6 +18,9 @@
     * {
         cursor: pointer;
         list-style: none;
+        margin: 0;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 
     details {
@@ -24,7 +29,8 @@
         border-radius: 5px;
         margin-bottom: 5px;
         font-family: Georgia, 'Times New Roman', Times, serif;
-        color: aliceblue
+        color: aliceblue;
+        
     }
 
     summary,
@@ -34,8 +40,25 @@
     }
 
     audio {
-        width: 95%;
+        width: 100%;
+        margin-left: 0;
+        position: fixed;
+        top: 7px;
+        margin-left: -10px;
+        background-color: transparent;
     }
+    audio::-webkit-media-controls-panel {
+      
+        border-radius: 0;
+        background-color: rgb(136,236,236);
+    }
+    audio::-webkit-media-controls {
+        color: rgb(0, 0, 0);
+        filter:invert(100%);
+        
+        background-color: rgb(136,236,236);
+    }
+    
 
     li {
         text-align: center;
@@ -47,17 +70,22 @@
     }
 </style>
 
-<body> 
-    <hr>
+<body>
+    <br>
+    <br>
+    <br>
+    <br>
     <center>
         <p id="musicaAtual">&nbsp;</p>
-        <audio id="player" controls controlsList="download">
-            <source src=" " type="audio/mpeg">
-        </audio>
+        
     </center>
-    <br>
-    <hr><br>
+    <audio id="player" controls controlsList="download">
+        <source src=" " type="audio/mpeg">
+    </audio>
+    <hr>
     <p id="contador">Oi</p>
+    <p id="recentes" style="color:rgb(192, 190, 190);">tudo bem?</p>
+    <br><br><br>
 </body>
 
 <script>
@@ -245,25 +273,18 @@
 
     ];
 
-    /*
-    --------------21/04
-Deep_Purple_Smoke_on_The_Water_Backing_Track_With_Vocal_PlewFI2a2qo_140.mp3
-Gypsys_Kiss_Backing_Track_eUyHI90yyUg_140.mp3                              
-Black_Sabbath_Iron_Man_Guitar_Backing_Track_w_original__vGScxlii1lQ_140.mp3
-Dire_Straits_Money_For_Nothing_Guitar_Backing_Track_WIT_bVtrH3ehjjQ_140.mp3
-Black_Sabbath_Symptom_of_the_Universe_Guitar_Backing_Tr_xXDvnF2nLL8_140.mp3
-N.I.B_Black_sabbath_guitar_backing_track_ozzy_vocals__-0TvwfX4E9M_140.mp3  
-Kiss_Lick_it_Up_Guitar_Backing_Track_w_Vocals__cft_vSIk1hY_140.mp3         
-Black_Sabbath_God_Is_Dead_Guitar_Backing_Track_w_Vocals_qz_hYVWc6bQ_140.mp3
-Bad_Religion_My_Sanity_Guitar_Backing_Track_w_Vocals__nKKkAmkAq4M_140.mp3  
-Garotos_Podres_Garoto_Podre_Guitar_Backing_Track_w_Voca_Y1mqXQFazBQ_140.mp3
-Matanza_Conforme_Disseram_As_Vozes_Guitar_Backing_Track_6ygP0Q7hKqc_140.mp3
-KISS_Detroit_Rock_City_Backing_Track_for_Guitarists_Ace_e8J39MAGzOk_140.mp3
-Led_Zeppelin_Whole_Lotta_Love_Guitar_Backing_Track_w_or_dAtad6UsPzE_140.mp3
+    //Ultimas musicas adicionadas
+    var texto = 'Ultimas musicas adicionadas:';
+    var cont = 0;
+    for (let index = (musicas.length - 1); index >= 0; index--) {
+        if (musicas[index][0] !== '' && cont !== 3) {
+            texto += '<br>-->&nbsp;&nbsp;&nbsp;<font onclick="setsource(\''+musicas[index][2]+'\',\''+musicas[index][1]+'\' )">' + musicas[index][0] + ' - ' + musicas[index][1]+'</font>';
+            cont++
+        } if (cont === 3)
+            break;
+    }
+    document.getElementById('recentes').innerHTML = texto;
 
-
-
-    */
 
     var contadorBanda = 0;
     var contadorMusicas = 0;
@@ -274,15 +295,16 @@ Led_Zeppelin_Whole_Lotta_Love_Guitar_Backing_Track_w_or_dAtad6UsPzE_140.mp3
 
         // console.log(elemento[0][0])
         // console.log(elemento[0][1])
-        if (document.getElementById('ul_' + elemento[0])) {
-            document.getElementById('ul_' + elemento[0]).innerHTML += `
+        if (elemento[0] !== '') {
+            if (document.getElementById('ul_' + elemento[0])) {
+                document.getElementById('ul_' + elemento[0]).innerHTML += `
             <li onclick="setsource('${elemento[2]}' ,'${elemento[1]}' )">${elemento[1]}<br>
     </li> <hr>`;
 
-            contadorMusicas++;
-        }
-        else {
-            body.innerHTML += `
+                contadorMusicas++;
+            }
+            else {
+                body.innerHTML += `
 
 
 <details id="details_${elemento[0]}">
@@ -299,8 +321,10 @@ Led_Zeppelin_Whole_Lotta_Love_Guitar_Backing_Track_w_or_dAtad6UsPzE_140.mp3
 
 `;
 
-            contadorBanda++;
+                contadorBanda++;
+            }
         }
+
 
     });
 
@@ -309,7 +333,7 @@ Led_Zeppelin_Whole_Lotta_Love_Guitar_Backing_Track_w_or_dAtad6UsPzE_140.mp3
 
     document.getElementById('contador').innerHTML = 'Encontrado ' + contadorBanda + ' bandas e ' + contadorMusicas + ' musicas'
 
-    function setsource(srcs,musica='') {
+    function setsource(srcs, musica = '') {
         document.getElementById('player').src = srcs;
         window.scroll(0, 0);
         document.getElementById('player').play();
