@@ -1,0 +1,17 @@
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\bin\Debug\net7.0-windows\Compactador de BackingTracks.exe
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\bin\Debug\net7.0-windows\Compactador de BackingTracks.deps.json
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\bin\Debug\net7.0-windows\Compactador de BackingTracks.runtimeconfig.json
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\bin\Debug\net7.0-windows\Compactador de BackingTracks.dll
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\bin\Debug\net7.0-windows\Compactador de BackingTracks.pdb
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.csproj.AssemblyReference.cache
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador_de_BackingTracks.Form1.resources
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.csproj.GenerateResource.cache
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.AssemblyInfoInputs.cache
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.AssemblyInfo.cs
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.csproj.CoreCompileInputs.cache
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.dll
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\refint\Compactador de BackingTracks.dll
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.pdb
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\Compactador de BackingTracks.genruntimeconfig.cache
+C:\Users\eduar\Desktop\Compactador de BackingTracks\Compactador de BackingTracks\obj\Debug\net7.0-windows\ref\Compactador de BackingTracks.dll
