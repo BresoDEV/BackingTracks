@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breso Backtracks</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top, #28213f 0%, #121212 45%, #070707 100%);
+      color: #fff;
+      padding: 32px 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #bdbdbd;
+      font-size: 1rem;
+    }
+
+    .player-card {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(14px);
+      margin-bottom: 28px;
+    }
+
+    .cover-wrap {
+      position: relative;
+    }
+
+    .cover {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 22px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+      background: #191919;
+    }
+
+    .badge {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      background: linear-gradient(135deg, #ffce45, #ff6b00);
+      color: #111;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .track-info h2 {
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .track-info h3 {
+      color: #ffce45;
+      font-size: 1.2rem;
+      margin-bottom: 26px;
+      font-weight: 600;
+    }
+
+    audio {
+      width: 100%;
+      margin-bottom: 22px;
+      accent-color: #ffce45;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      padding: 13px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      color: #111;
+      background: #ffce45;
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(255, 206, 69, 0.25);
+    }
+
+    button.secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .search-box {
+      margin-bottom: 18px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .search-box input::placeholder {
+      color: #aaa;
+    }
+
+    .playlist {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .music-card {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .music-card:hover,
+    .music-card.active {
+      background: rgba(255, 206, 69, 0.14);
+      border-color: rgba(255, 206, 69, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .music-card img {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #191919;
+    }
+
+    .music-card strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .music-card span {
+      color: #bdbdbd;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 760px) {
+      .player-card {
+        grid-template-columns: 1fr;
+        padding: 18px;
+      }
+
+      .cover-wrap {
+        max-width: 320px;
+        margin: 0 auto;
+      }
+
+      .track-info {
+        text-align: center;
+      }
+
+      .controls {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>🎸 Breso Backtracks</h1>
+      <p>Backing tracks para estudar, improvisar e tocar guitarra.</p>
+    </header>
+
+    <section class="player-card">
+      <div class="cover-wrap">
+        <img id="capa" class="cover" src="" alt="Capa da música" />
+        <span class="badge">Now Playing</span>
+      </div>
+
+      <div class="track-info">
+        <h2 id="titulo">Nenhuma música</h2>
+        <h3 id="banda">Artista</h3>
+
+        <audio id="audio" controls></audio>
+
+        <div class="controls">
+          <button class="secondary" id="prevBtn">⟵ Anterior</button>
+          <button id="playBtn">▶ Tocar</button>
+          <button class="secondary" id="nextBtn">Próxima ⟶</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="search-box">
+      <input id="busca" type="text" placeholder="Buscar por música ou banda..." />
+    </div>
+
+    <section id="playlist" class="playlist"></section>
+  </main>
+
+  <script>
+  
+      var site  = "https://bresodev.github.io/BackingTracks/musicas/";
+  
+  
+	var capaACDC = "https://s2-techtudo.glbimg.com/yIfA1YfWTrU631iS520fP4xyDyY=/400x0/smart/filters:strip_icc()/s.glbimg.com/po/tt2/f/original/2014/01/09/acdc-wallpaper.jpg";
+	var capaBlackSabbath = "https://hmrock.com.br/wp-content/uploads/2019/05/BLACK-SABBATH-Walpurgis-CD-1970-Peel-Sessions.jpg";
+	var capaConsumed = "https://www.metal-archives.com/images/3/5/4/0/3540301294_photo.jpg?0242";
+	var capaDropkickMurphys = "https://www.headbangersnews.com.br/wp-content/uploads/2024/09/dropkick-murphys-copy.jpg";
+	var capaGreenDay = "data:image/png;base64,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";
+	var capaIronMaiden = "https://i.scdn.co/image/ab67616d0000b2734c111d9ca05d852bbca7e652";
+	var capaJudasPriest = "https://imusic.b-cdn.net/images/item/original/924/0194398917924.jpg?judas-priest-2021-reflections-50-heavy-metal-years-of-music-cd&class=scaled&v=1626855888";
+	var capaKiss = "https://i.discogs.com/QD6jJYCDGJ_v8UkQbiqvhSbgZWmXq4EDLJIfEpekfZw/rs:fit/g:sm/q:90/h:600/w:576/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE1MzA3/My0xNjgyNjA1MjY4/LTk4NTcuanBlZw.jpeg";
+	var capaLedZeppelin = "https://cdn-images.dzcdn.net/images/cover/bf6394fd785568147dc6a0a27ebf1bc3/0x1900-000000-80-0-0.jpg";
+	var capaMetallica = "https://universalmusic.vtexassets.com/arquivos/ids/185314/cd%20metallica-ride-the-lightning-importado-cd%20metallica-ride-the-lightning-impo-00042283814028-00004228381402.jpg?v=638482831030130000";
+	var capaOzzy = "https://cdn-images.dzcdn.net/images/artist/e18bac5143c6764b58096640b7a93f06/1900x1900-000000-80-0-0.jpg";
+	var capaSocialDistortion = "https://pm1.aminoapps.com/6729/8cd557354711c6e4381abfed44dcabb358d88576v2_00.jpg";
+	var capaAccept = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbnw2ZaPfFq190IFtT26KCE4lEuJU3-fTkPg&s";
+	var capaAirborne = "https://i.scdn.co/image/ab67616d00001e02f14b478eb49241dd646c8626";
+	var capaAudioslave = "https://m.media-amazon.com/images/I/818106vSzxL.jpg";
+	var capaBadReligion = "https://cdn.awsli.com.br/600x450/769/769081/produto/174149241/e910d37777.jpg";
+	var capaBlink182 = "https://upload.wikimedia.org/wikipedia/pt/f/f2/Blink-182_%C3%A1lbum.jpg";
+	var capaBoucingSouls = "https://upload.wikimedia.org/wikipedia/en/2/26/The_Bouncing_Souls_-_Hopeless_Romantic_cover.jpg";
+	var capaDeepPurple = "https://m.media-amazon.com/images/I/81r5+A9OmkL.jpg";
+	var capaCreedence = "https://m.media-amazon.com/images/I/81Vub58dt2L.jpg";
+	var capaDefLeppard = "https://m.media-amazon.com/images/I/A1STgBT73QL._UF894,1000_QL80_.jpg";
+	var capaDireStraits = "https://yt3.googleusercontent.com/mytT4DRTuQnT1VsAO6QWelv-LzNUfX1wi4JPrFY1vGHZNMMdWa8bclI3qv_9fyooXQuiRaLX8E8=s900-c-k-c0x00ffffff-no-rj";
+	var capaEdwardSharpe = "https://cdn-images.dzcdn.net/images/artist/c6253de8ccc721cbe104b1e2850655df/1900x1900-000000-80-0-0.jpg";
+	var capaGarotosPodres = "https://i.scdn.co/image/ab67616d0000b273136d67419509df09c9f929bc";
+	var capaGunsnRoses = "https://i.scdn.co/image/ab6761610000e5eb50defaf9fc059a1efc541f4c";
+	var capaHillbillyRawhide = "https://cdn-images.dzcdn.net/images/cover/a3bf8d22529b52a8691689e178394894/1900x1900-000000-80-0-0.jpg";
+	var capaKingsofLeon = "https://i.scdn.co/image/ab6761610000e5eb6fc940f2e99875ced9bafed0";
+	var capaKorn = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWrAUnhqSxsTRbwVL3gS3OAwZWRMw9tBYOZA&s";
+	var capaLinkinPark = "https://lastfm.freetls.fastly.net/i/u/ar0/c21b3923a4d3ff5629996f3f8e178140.jpg";
+	var capaMatanza = "https://upload.wikimedia.org/wikipedia/pt/b/b1/Matanza-pior-cenario-possivel.jpg";
+	var capaMattWillis = "https://cdn-images.dzcdn.net/images/artist/727fe511a38d10326fbdf06ad2ec5392/1900x1900-000000-80-0-0.jpg";
+	var capaMegadeth = "https://i.scdn.co/image/ab67616d0000b27342be808911785ceb13140edc";
+	var capaMisfits = "https://i.scdn.co/image/ab67616100005174030d67ff9576754ff230b2c0";
+	var capaMotorhead = "https://hmrock.com.br/wp-content/uploads/2017/01/1000x1000-1-1.jpg";
+	var capaMuse = "https://cdn-images.dzcdn.net/images/artist/cd7c5861be0009d3b75d4d3c069317a7/1900x1900-000000-80-0-0.jpg";
+	var capaOutfield = "https://thisis-images.spotifycdn.com/37i9dQZF1DZ06evO0SdqzC-default.jpg";
+	var capaPhilRudd = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbREnB2XFYyToDC1lxAY_M14m5OplevowPzg&s";
+	var capaQueen = "https://m.media-amazon.com/images/M/MV5BMjI4OTIwNDAxMF5BMl5BanBnXkFtZTgwOTkzOTAyODE@._V1_FMjpg_UX1000_.jpg";
+	var capaRammstein  = "https://cdn-images.dzcdn.net/images/cover/040f9ad9afc1a9121e26a82987f5414d/1900x1900-000000-80-0-0.jpg";
+	var capaRamones = "https://cdn-images.dzcdn.net/images/cover/5e4fa09fd2de120d601098123f43e328/0x1900-000000-80-0-0.jpg";
+	var capaRatosdePorao = "https://i.pinimg.com/474x/ee/23/e7/ee23e7c569f09021968ed3a1028472d4.jpg";
+	var capaSlipKnot = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsix1ccvSOvduhi1ChWYUBOQNn56LNFSpmwA&s";
+	var capaStatusQuo = "https://imusic.b-cdn.net/images/item/original/437/0600753575437.jpg?status-quo-2015-rockin-all-over-the-world-the-collection-cd&class=scaled&v=1426598337";
+	var capaTenaciousD = "https://m.media-amazon.com/images/I/51BMCpQzHtL._UF1000,1000_QL80_.jpg";
+	var capaTequilaBaby = "https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da8449c679cf1d4c68d3c0ddb3a2";
+	var capaTheAnimals = "https://cdn-images.dzcdn.net/images/cover/32af0bbabd9459d57acc697ae162ca0c/0x1900-000000-80-0-0.jpg";
+	var capaTheBriggs = "https://f4.bcbits.com/img/a3979635172_16.jpg";
+	var capaTheDistillers = "https://crazymetalmind.com/wp-content/uploads/2013/09/972428_502074366547687_371007083_n.jpg";
+	var capaToto = "https://static.wixstatic.com/media/294f34_5001a0ad7b33432caceaa2ebce2281df~mv2.jpeg/v1/fill/w_309,h_317,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/toto.jpeg";
+	var capaVanHalen = "https://m.media-amazon.com/images/I/91uG5dJsMdL.jpg";
+	var capaWhiteStripes = "https://i.scdn.co/image/ab6761610000e5eb70cc06de8fc28226d4743cd9";
+	var capaZZTop = "https://images.sk-static.com/images/media/profile_images/artists/307157/huge_avatar";
+	 
+	 
+    const capaPadrao = 'https://placehold.co/600x600/181818/ffce45?text=Backing+Track';
+     
+
+    
+
+const musicas = [
+{banda: 'AC/DC', titulo: 'Back in Black', src: site + 'back in black.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Bad Boy Boogie', src: site + 'Bad Boy Boogie.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Gimme a Bullet', src: site + 'Gimme a Bullet.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Gone Shootin', src: site + 'Gone Shootin.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Long Way to the Top', src: site + 'Long Way to the Top.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Rock N Roll Train', src: site + 'Rock N Roll Train.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Rock or Bust', src: site + 'Rock or Bust.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Up to My Neck in You', src: site + 'Up to My Neck in You.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Who Made Who', src: site + 'Who Made Who.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo: 'Whole Lotta Rosie (Donington)', src: site + 'Whole Lotta Rosie - Live.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Beating Around the Bush', src: site + 'Beating_Around_the_Bush.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Black Ice', src: site + 'AC_DC - Black Ice.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Cant Stop Rock n Roll', src: site + 'Cant_stop_rock_n_roll.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Caught With Your Pants Down', src: site + 'Caught_with_Your_Pants_Down.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Demons Fire', src: site + 'Demon_Fire.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Dirty Deeds Done Dirt Cheap', src: site + 'Dirty_Deeds_Done_Dirt_Cheap.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'For Those About to Rock We Salute You', src: site + 'For_Those_About_to_Rock_We_Salute_You.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Girls Got Rhythm', src: site + 'Girls_Got_Rhythm.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Give It Up', src: site + 'Give_It_Up.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Givin The Dog a Bone', src: site + 'GIVIN THE DOG A BONE.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Hail Caesar', src: site + 'Hail_Caesar.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Hard As A Rock', src: site + 'Hard_As_A_Rock.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Hells Bells', src: site + 'Hells_Bells.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'High Voltage', src: site + 'High_Voltage.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Highway to Hell', src: site + 'Highway_to_Hell.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'If You Want Blood', src: site + 'If_You_Want_Blood.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Jailbreak', src: site + 'Jailbreak.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Let Me Put My Love Into You', src: site + 'Let_Me_Put_My_Love_Into_You.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Let There Be Rock (Bon Scott)', src: site + 'AC_DC Let there be rock backing track with Bon Scott.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Let There Be Rock (Donington)', src: site + 'Let_There_Be_Rock_from_Live_At_Donington.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Live Wire', src: site + 'Live_Wire.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Love Hungry Man', src: site + 'Love_Hungry_Man.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Riff Raff', src: site + 'Riff_Raff.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Rock And Roll Aint Noise Pollution', src: site + 'Rock_And_Roll_Aint_Noise_Pollution.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Safe In New York City', src: site + 'Safe_In_New_York_City.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Satellite Blues', src: site + 'Satellite_Blues.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Shake a Leg', src: site + 'Shake_a_Leg.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Shoot to Thrill', src: site + 'Shoot_to_thrill.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Shot Down In Flames', src: site + 'Shot_Down_In_Flames.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Sin City', src: site + 'ACDC - SIN CITY.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Skies on Fire', src: site + 'Skies_on_Fire.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Squealer', src: site + 'AC_DC-_Squealer.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Stiff Upper Lip', src: site + 'Stiff_Upper_Lip.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'T.N.T', src: site + 'T.N.T.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'The Jack', src: site + 'AC_DC - The Jack.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'The Razors Edge', src: site + 'ACDC - THE RAZORS EDGE.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Through The Mists Of Time', src: site + 'AC_DC - Through The Mists Of Time.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Thunderstruck', src: site + 'Thunderstruck.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Touch Too Much',src: site +  'Touch_too_much.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Walk All Over You', src: site + 'Walk_All_Over_You.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'War Machine', src: site + 'ACDC - WAR MACHINE.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Whats Next To The Moon', src: site + 'Whats_Next_to_the_Moon.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Who Made Who', src: site + 'Who_Made_Who.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Whole Lotta Rosie', src: site + 'Lotta_Rosie.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Whole Lotta Rosie (River Plate)', src: site + 'Whole Lotta Rosie River Plate.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'You Shook Me All Night Long', src: site + 'You_Shook_Me_All_Night_Long.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Shot In The Dark', src: site + 'Shot In The Dark.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Big Gun', src: site + 'ACDC - BIG GUN.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Sin City', src: site + 'ACDC Sin City.mp3', capa: capaACDC},
+{banda: 'AC/DC', titulo:'Dog Eat Dog', src: site + 'Dog Eat Dog.mp3', capa: capaACDC},
+
+
+{banda: 'Accept',  titulo:'Lifes a Bitch', src: site + 'Lifes_a_Bitch.mp3', capa: capaAccept},//1231198837889044480/1231201342366810162/?ex=6636189a&amp;is=6623a39a&amp;hm=38cee1d449687c9160801ceb87e3ad4cec9dafbb316b632a65b3b60e6811f3b8&amp;', capa: ''},
+{banda: 'Airbourne', titulo: 'Blackjack', src: site + 'Blackjack.mp3', capa: capaAirborne},///1231231900970913814/Blackjack.mp3?ex=66363510&amp;is=6623c010&amp;hm=3a585e52aaaab0cbcdf7041ba4ded0284182ccf0e180420f88404d7ee35c0821&amp;', capa: ''},
+{banda: 'Audioslave', titulo: 'Show Me How to Live', src: site + 'Show_Me_How_to_Live.mp3', capa: capaAudioslave},///1231232531622269049/?ex=663635a6&amp;is=6623c0a6&amp;hm=9ff0d2c64166fcd9f010ba99b9fbf4fcb25f4bcc12f6004e86e9f9820d9746ec&amp;', capa: ''},
+{banda: 'Audioslave', titulo: 'Like A Stone', src: site + 'Audioslave - Like A Stone.mp3', capa: capaAudioslave},///1231232531622269049/?ex=663635a6&amp;is=6623c0a6&amp;hm=9ff0d2c64166fcd9f010ba99b9fbf4fcb25f4bcc12f6004e86e9f9820d9746ec&amp;', capa: ''},
+{banda: 'Bad Religion',  titulo:'New Dark Ages', src: site + 'New_Dark_Ages.mp3', capa: capaBadReligion},//1231198837889044480/1231201627482882070/?ex=663618de&amp;is=6623a3de&amp;hm=a7bc7d36b9d1a184c7a9e7b9584eae7e7a7856fe1255688150fd851af456042b&amp;', capa: ''},
+{banda: 'Bad Religion', titulo: 'My Sanity', src: site + 'Bad_Religion_My_Sanity_Guitar_Backing_Track_w_Vocals__nKKkAmkAq4M_140.mp3', capa: capaBadReligion},///1231409947817021471/Bad_Religion_My_Sanity_Guitar_Backing_Track_w_Vocals__nKKkAmkAq4M_140.mp3?ex=6636dae2&amp;is=662465e2&amp;hm=2251bb5f5b09881a6001a7e0d466d673cb9b74f402290b9b37976b55446799ba&amp;', capa: ''},
+{banda: 'Black Sabbath', titulo: 'Children on the Grave', src: site + 'Children_Of_The_Grave.mp3', capa: capaBlackSabbath},///1231231897527521350/Children_Of_The_Grave.mp3?ex=6625118f&amp;is=6623c00f&amp;hm=ed1408379ed7a7a83d3b94aaf146076bab1697d532258f6a9ae5b64732f25c77&amp;', capa: ''},
+{banda: 'Black Sabbath', titulo: 'Eletric Funeral', src: site + 'Electric_Funeral.mp3', capa: capaBlackSabbath},////?ex=6636350f&amp;is=6623c00f&amp;hm=01a646e1315edd11d32e9ee334868c48082bb66407e385468b4ae62b35422fc3&amp;', capa: ''},
+{banda: 'Black Sabbath', titulo: 'God is Dead', src: site + 'Black_Sabbath_God_Is_Dead_Guitar_Backing_Track_w_Vocals_qz_hYVWc6bQ_140.mp3', capa: capaBlackSabbath},///1231409948152434718/Black_Sabbath_God_Is_Dead_Guitar_Backing_Track_w_Vocals_qz_hYVWc6bQ_140.mp3?ex=6636dae2&amp;is=662465e2&amp;hm=61f70293b5f29f5b8caea114629947f40bbb92f26153dbead8e0db370ac62c0b&amp;', capa: ''},
+{banda: 'Black Sabbath', titulo: 'I', src: site + 'I.mp3', capa: capaBlackSabbath},//
+{banda: 'Black Sabbath', titulo: 'Iron Man', src: site + 'Black_Sabbath_Iron_Man_Guitar_Backing_Track_w_original__vGScxlii1lQ_140.mp3', capa: capaBlackSabbath},///1231410060798988399/Black_Sabbath_Iron_Man_Guitar_Backing_Track_w_original__vGScxlii1lQ_140.mp3?ex=6636dafc&amp;is=662465fc&amp;hm=c67d54272423ac1b923807d5bdb9884d1c5319a3692c6796d5843ef0abdb8a33&amp;', capa: ''},
+{banda: 'Black Sabbath', titulo: 'NIB', src: site + 'N.I.B_Black_sabbath_guitar_backing_track_ozzy_vocals__-0TvwfX4E9M_140.mp3', capa: capaBlackSabbath},//?ex=6636dae2&amp;is=662465e2&amp;hm=9009859b3616b970d276c55df8f4c5bab6eda16b6dd3779cad02f7d727a7b34a&amp;', capa: ''},
+{banda: 'Black Sabbath', titulo: 'Paranoid', src: site + 'Paranoid.mp3', capa: capaBlackSabbath},//1231198837889044480/1231201628452032542/?ex=663618de&amp;is=6623a3de&amp;hm=e2247459b2b4146c78e2bbaffb733b7c94d343a05a75062b27db5a80fde17e99&amp;', capa: ''},
+{banda: 'Black Sabbath', titulo: 'Symptom of the Universe', src: site + 'Black_Sabbath_Symptom_of_the_Universe_Guitar_Backing_Tr_xXDvnF2nLL8_140.mp3', capa: capaBlackSabbath},///1231409949091823638/Black_Sabbath_Symptom_of_the_Universe_Guitar_Backing_Tr_xXDvnF2nLL8_140.mp3?ex=6636dae2&amp;is=662465e2&amp;hm=9623930406784b425e69af57d3963f3b5bb99f5db35fa419500e11fe9ba91163&amp;', capa: ''},
+{banda: 'Black Sabbath', titulo: 'War Pigs', src: site + 'war-pigs.mp3', capa: capaBlackSabbath},
+{banda: 'Blink 182', titulo: 'First Date', src: site + 'First_Date.mp3', capa: capaBlink182},///1231232036845387816/First_Date.mp3?ex=66363530&amp;is=6623c030&amp;hm=e87faa0f39fe402c28a2fab8b73099bbf8b41228f2c5b590dee8cc21a608a776&amp;', capa: ''},
+{banda: 'Boucing Souls', titulo: 'Manthem', src: site + 'Manthem.mp3', capa: capaBoucingSouls},//1231198837889044480/1231201626501677177/?ex=663618de&amp;is=6623a3de&amp;hm=1adae4c0632c989221dbadb48675847c40900205010b47b44b837f272d556435&amp;', capa: ''},
+{banda: 'Consumed', titulo: 'Heavy Metal Winner', src: site + 'Heavy_Metal_Winner.mp3', capa: capaConsumed},
+{banda: 'Creedence', titulo: 'Have You Ever Seen The Rain', src: site + 'Have_You_Ever_Seen_The_Rain.mp3', capa: capaCreedence},
+{banda: 'Deep Purple', titulo: 'Gypsys Kiss', src: site + 'Gypsys_Kiss_Backing_Track_eUyHI90yyUg_140.mp3', capa: capaDeepPurple},///1231410061113430047/Gypsys_Kiss_Backing_Track_eUyHI90yyUg_140.mp3?ex=6636dafd&amp;is=662465fd&amp;hm=f8955ade86ecb8598c28936b22384eedaebca5a60859498f56ce44be47552113&amp;', capa: ''},
+{banda: 'Deep Purple', titulo: 'Smoke on The Water', src: site + 'Deep_Purple_Smoke_on_The_Water_Backing_Track_With_Vocal_PlewFI2a2qo_140.mp3', capa: capaDeepPurple},///1231418230535360563/Deep_Purple_Smoke_on_The_Water_Backing_Track_With_Vocal_PlewFI2a2qo_140.mp3?ex=662667d8&amp;is=66251658&amp;hm=9831974a12f3cd92f9eb893e0d029fc90eaa38ec609a183848f8e028a070c35d&amp;', capa: ''},
+{banda: 'Def Leppard', titulo: 'Pour Some Sugar on Me', src: site + 'Pour_Some_Sugar_On_Me.mp3', capa: capaDefLeppard},///1231232284880015430/?ex=6636356b&amp;is=6623c06b&amp;hm=e5d329ee853f835a48f07438feeeec4c397d53cbfe97fb92ca501d4e109da766&amp;', capa: ''},
+{banda: 'Dire Straits', titulo: 'Money for Nothing', src: site + 'Dire_Straits_Money_For_Nothing_Guitar_Backing_Track_WIT_bVtrH3ehjjQ_140.mp3', capa: capaDireStraits},///1231409949385560176/Dire_Straits_Money_For_Nothing_Guitar_Backing_Track_WIT_bVtrH3ehjjQ_140.mp3?ex=662708e2&amp;is=6625b762&amp;hm=d9b5d18d870fb9dd0aba032c12e5d5ef8fb3a934d495fbd3d8676a1e145e3d59&amp;', capa: ''},
+{banda: 'Dire Straits', titulo: 'Song For Sonny Liston', src: site + 'Song_For_Sonny_Liston.mp3', capa: capaDireStraits},///1231232531970392154/?ex=663635a6&amp;is=6623c0a6&amp;hm=cfa3c612f0451803ebdd5ccc83acc81c29e92cedee4a07df5e65422ff2e136f6&amp;', capa: ''},
+{banda: 'Dire Straits', titulo: 'Sultans Of Swing', src: site + 'Sultans_Of_Swing.mp3', capa: capaDireStraits},///1231232532922634280/?ex=663635a7&amp;is=6623c0a7&amp;hm=dfa36a4b9f01bdc972316d3411f79ad9b5850dc11c9c537d4820a7bdf1c87c3a&amp;', capa: ''},
+{banda: 'Dropkick Murphys', titulo: 'Time to Go', src: site + 'Time to Go.mp3', capa: capaDropkickMurphys},
+{banda: 'Edward Sharpe', titulo: 'Home', src: site + 'Home.mp3', capa: capaEdwardSharpe},///1231232035943612497/?ex=66363530&amp;is=6623c030&amp;hm=5cca38c6dfa2d8849be579c28a47cd926ce3ce5db625037d963d7d215e538199&amp;', capa: ''},
+{banda: 'Garotos Podres', titulo: 'Garoto Podre', src: site + 'Garotos_Podres_Garoto_Podre_Guitar_Backing_Track_w_Voca_Y1mqXQFazBQ_140.mp3', capa: capaGarotosPodres},///1231409947313438750/Garotos_Podres_Garoto_Podre_Guitar_Backing_Track_w_Voca_Y1mqXQFazBQ_140.mp3?ex=6636dae1&amp;is=662465e1&amp;hm=e89208e0409d3381141d68958ec164b6be59e781421b50a033809194416816c3&amp;', capa: ''},
+{banda: 'Green Day',  titulo:'She', src: site + 'she.mp3', capa: capaGreenDay},
+{banda: 'Green Day', titulo: 'American Idiot', src: site + 'american-idiot.mp3', capa: capaGreenDay},
+{banda: 'Guns n Roses', titulo: 'I Used to Love Her', src: site + 'I_Used_To_Love_Her.mp3', capa: capaGunsnRoses},///1231232161122615296/?ex=6636354e&amp;is=6623c04e&amp;hm=d7e5a43638ad0df3f7dc3e3ee545576bcfe5ab6f7cca7f02ba568d26949c6815&amp;', capa: ''},
+{banda: 'Guns n Roses', titulo: 'Paradise City', src: site + 'Guns N Roses - Paradise City.mp3', capa: capaGunsnRoses},///1231232161122615296/?ex=6636354e&amp;is=6623c04e&amp;hm=d7e5a43638ad0df3f7dc3e3ee545576bcfe5ab6f7cca7f02ba568d26949c6815&amp;', capa: ''},
+{banda: 'Hillbilly Rawhide',  titulo:'O Enxofre e a Cachaca', src: site + 'O_Enxofre_e_a_Cachaca.mp3', capa: capaHillbillyRawhide},//1231198837889044480/1231201628124872714/?ex=663618de&amp;is=6623a3de&amp;hm=5a0c5394c87e71b13bff62cd4d91d5533d4112ec25c87e0e3c691a3dcc340a9e&amp;', capa: ''},
+{banda: 'Iron Maiden',  titulo:'Number of the Beast', src: site + 'the-number-of-the-beast.mp3', capa: capaIronMaiden},
+{banda: 'Iron Maiden',  titulo:'The Trooper', src: site + 'the-trooper.mp3', capa: capaIronMaiden},
+{banda: 'Iron Maiden', titulo: 'Be Quick or Be Dead', src: site + 'be_quick_or_be_dead.mp3', capa:capaIronMaiden},///1231231900589494342/be_quick_or_be_dead.mp3?ex=66363510&amp;is=6623c010&amp;hm=ae467498e6ebf72207cf5db1acee0010cfdfd173370df0f48228ff1789042ca6&amp;', capa: ''},
+{banda: 'Iron Maiden', titulo: 'Running Free', src: site + 'Running_Free.mp3', capa: capaIronMaiden},//1231198837889044480/1231201953216987257/?ex=6636192c&amp;is=6623a42c&amp;hm=4b98b2a1a19a78072c4e6fbabc2beae2ab5c17f4ba5ae79163a22d7d8e5e0aaf&amp;', capa: ''},
+{banda: 'Iron Maiden', titulo: 'Wicker Man', src: site + 'Wicker_Man.mp3', capa: capaIronMaiden},//1231198837889044480/1231202353244536874/?ex=6636198b&amp;is=6623a48b&amp;hm=da89828090770bd8d1bef85450fac989f2a942d3390c86eb860e88cc26716e60&amp;', capa: ''},
+{banda: 'Judas Priest', titulo: 'Breaking the Law', src: site + 'breaking-the-law.mp3', capa: capaJudasPriest},
+{banda: 'Kings of Leon', titulo: 'Sex on Fire', src: site + 'Sex_On_Fire.mp3', capa: capaKingsofLeon},///1231232530896654398/?ex=663635a6&amp;is=6623c0a6&amp;hm=f4368c73ac03670cb8d1a870c0b6fe3342b6b0b9f242ba63c2739a4e0f9aa619&amp;', capa: ''},
+{banda: 'Kiss', titulo: 'Detroit Rock City', src: site + 'KISS_Detroit_Rock_City_Backing_Track_for_Guitarists_Ace_e8J39MAGzOk_140.mp3', capa: capaKiss},///1231409946726236261/?ex=6636dae1&amp;is=662465e1&amp;hm=c453b845a4595ba5f51e9b45bc9cf078bdbe752b0948c6e1fa3c69e4dd488e38&amp;', capa: ''},
+{banda: 'Kiss', titulo: 'Deuce', src: site + 'deuce.mp3', capa: capaKiss},
+{banda: 'Kiss', titulo: 'I Love It Loud', src: site + 'I_LOVE_IT_LOUD.mp3', capa: capaKiss},///1231232036468031568/?ex=66363530&amp;is=6623c030&amp;hm=b305760784176ad31137468529a663f57024284d65f81aae7f5bd18df7a5f9c4&amp;', capa: ''},
+{banda: 'Kiss', titulo: 'Lick It Up', src: site + 'Kiss_Lick_it_Up_Guitar_Backing_Track_w_Vocals__cft_vSIk1hY_140.mp3', capa: capaKiss},///1231409948488110190/?ex=6636dae2&amp;is=662465e2&amp;hm=b2279583cb9391d61878562be1c23f47e3840b2e87e87a0986c2792287a61a9b&amp;', capa: ''},
+{banda: 'Kiss', titulo: 'Love Gun', src: site + 'love-gun.mp3', capa: capaKiss},
+{banda: 'Kiss', titulo: 'Psycho Circus', src: site + 'Psycho Circus.mp3', capa: capaKiss},
+{banda: 'Korn', titulo: 'Right Now', src: site + 'Righ_Now.mp3', capa: capaKorn},///1231232285664215052/?ex=6636356c&amp;is=6623c06c&amp;hm=e8081dde47de1bab48b9018df60fbceb99dff2794a6bbbfe37dc8f8ca9f5ce57&amp;', capa: ''},
+{banda: 'Led Zeppelin', titulo: 'Going to California', src: site + 'Going_to_California.mp3', capa: capaLedZeppelin},///1231232037688442880/Going_to_California.mp3?ex=66363530&amp;is=6623c030&amp;hm=5d67e8d2cc4648b1c7751c01d7bc7b4fed83fca1c0c466152c903bacdfbb84fe&amp;', capa: ''},
+{banda: 'Led Zeppelin', titulo: 'Immigrant Song', src: site + 'Immigrant_Song.mp3', capa: capaLedZeppelin},//1231198837889044480/1231201341385342976/?ex=6636189a&amp;is=6623a39a&amp;hm=f563c81161b3c83f5eae644e842fb813b78a3dff45781a71424912a76ee7c2c6&amp;', capa: ''},
+{banda: 'Led Zeppelin', titulo: 'Ramble On', src: site + 'Ramble_On.mp3', capa: capaLedZeppelin},///1231232285198651442/?ex=6636356b&amp;is=6623c06b&amp;hm=de033969ad0a62adc086c9787881e50b1e95faeab279b25ddf546649d06f6994&amp;', capa: ''},
+{banda: 'Led Zeppelin', titulo: 'Rock and Roll', src: site + 'Rock_and_Roll.mp3', capa: capaLedZeppelin},//1231198837889044480/1231201799097155624/?ex=66361907&amp;is=6623a407&amp;hm=d66a07a88f51fe638b48175637d9b9ca82319313c5c3f638b6119c26d0e4b451&amp;', capa: ''},
+{banda: 'Led Zeppelin', titulo: 'Stairway to Heaven', src: site + 'stairway-to-heaven.mp3', capa: capaLedZeppelin},
+{banda: 'Led Zeppelin', titulo: 'Whole Lotta Love', src: site + 'Led_Zeppelin_Whole_Lotta_Love_Guitar_Backing_Track_w_or_dAtad6UsPzE_140.mp3', capa: capaLedZeppelin},///1?ex=662708e1&amp;is=6625b761&amp;hm=fdb6904fef8c7a0c5224d6caeeb3d1e8cf045a2d6c2919ed4466b0e7516c74b1&amp;', capa: ''},
+{banda: 'Linkin Park', titulo: 'Faint', src: site + 'Faint.mp3', capa: capaLinkinPark},///1231231899691778118/Faint.mp3?ex=66251190&amp;is=6623c010&amp;hm=134430fdf5cdb2351c50bbc4a6b1f41413a8ec997cbb86b7413acc17487d6890&amp;', capa: ''},
+{banda: 'Matanza', titulo: 'Conforme Disseram as Vozes', src: site + 'Matanza_Conforme_Disseram_As_Vozes_Guitar_Backing_Track_6ygP0Q7hKqc_140.mp3', capa: capaMatanza},///1231409947028361268/?ex=662708e1&amp;is=6625b761&amp;hm=140beffec8e0c8ae74dea31232578344f2034254638b2fbad85c359bd8a1006f&amp;', capa: ''},
+{banda: 'Matanza', titulo: 'Estrada de Ferro Thunder Dope', src: site + 'Thunder_Dope.mp3', capa: capaMatanza},//1231198837889044480/1231202232549113907/?ex=6624f5ee&amp;is=6623a46e&amp;hm=aceba9f76696f1881e4d70264b5abfd05681e195b3c3bc6ee4653da02f6b6803&amp;', capa: ''},
+{banda: 'Matanza', titulo: 'Meio Psicopata', src: site + 'Meio_Psicopata.mp3', capa: capaMatanza},//1231198837889044480/1231201626820448329/?ex=6624f55e&amp;is=6623a3de&amp;hm=9b2258b384e1ad117bc9797fd7291e69daf3256779d0cef970bfe4afcbeab4e5&amp;', capa: ''},
+{banda: 'Matanza', titulo: 'Nascido Num Dia de Azar', src: site + 'Nascido Num Dia de Azar - Matanza.mp3', capa: capaMatanza},///1231409947028361268/?ex=662708e1&amp;is=6625b761&amp;hm=140beffec8e0c8ae74dea31232578344f2034254638b2fbad85c359bd8a1006f&amp;', capa: ''},
+{banda: 'Matanza', titulo: 'Tempo Ruim', src: site + 'tempo ruim.mp3', capa: capaMatanza},//1231198837889044480/1231201626820448329/?ex=6624f55e&amp;is=6623a3de&amp;hm=9b2258b384e1ad117bc9797fd7291e69daf3256779d0cef970bfe4afcbeab4e5&amp;', capa: ''},
+{banda: 'Matt Willis', titulo: 'Crash', src: site + 'matt_willis_crash.mp3', capa: capaMattWillis},///1231232286725509262/?ex=662511ec&amp;is=6623c06c&amp;hm=2453b53782d7693c93cc0e659b3a1aa229b2ecb542f458ccfed00525393566d5&amp;', capa: ''},
+{banda: 'Megadeth',  titulo:'Peace Sells', src: site + 'Peace_Sells.mp3', capa: capaMegadeth},//1231198837889044480/1231201628787445790/?ex=663618de&amp;is=6623a3de&amp;hm=4663476d62b8943aaa0ce7bbb5585021858c3b83f1717dfef407fd33fe08ba94&amp', capa: ''},
+{banda: 'Megadeth',  titulo:'Symphony Of Destruction', src: site + 'Symphony_Of_Destruction.mp3', capa: capaMegadeth},//1231198837889044480/1231202231362125905/?ex=6636196e&amp;is=6623a46e&amp;hm=5fcc44d4672971cca1ccc970eac26279a109897f4edbd81b2305b6edfa27d981&amp;', capa: ''},
+{banda: 'Metallica', titulo: 'Master of Puppetss', src: site + 'master-of-puppets.mp3', capa: capaMetallica},
+{banda: 'Misfits', titulo: 'Diana', src: site + 'Diana.mp3', capa: capaMisfits},
+{banda: 'Misfits', titulo: 'Hybrid Moments', src: site + 'Hybrid_Moments.mp3', capa: capaMisfits},
+{banda: 'Misfits', titulo: 'Monster Mash', src: site + 'Monster_Mash.mp3', capa: capaMisfits},
+{banda: 'Misfits', titulo: 'Scream', src: site + 'Scream.mp3', capa: capaMisfits},
+{banda: 'Motorhead',  titulo:'The Game', src: site + 'The_Game.mp3', capa: capaMotorhead},///1231232529206476840/?ex=66251226&amp;is=6623c0a6&amp;hm=2c6e5d63dcdbe5594584c7c4deb696b2dd14de17f4bde1d09afcdc55e9ff2bba&amp;', capa: ''},
+{banda: 'Motorhead', titulo: 'Ace of Spades', src: site + 'Ace of Spades.mp3', capa: capaMotorhead},
+{banda: 'Motorhead', titulo: 'Hellraiser', src: site + 'Motorhead_-_Hellraiser.mp3', capa: capaMotorhead},///1231232287027368107/?ex=6636356c&amp;is=6623c06c&amp;hm=1e31ac59196167aa240a512e052dce3b35376eb06ffc7e99beb6a3f5a11d301f&amp;', capa: ''},
+{banda: 'Motorhead', titulo: 'Heroes', src: site + 'Heroes.mp3', capa: capaMotorhead},///1231232035281043517/?ex=662511b0&amp;is=6623c030&amp;hm=500c8c1ce57493fe494922bc07ffe378a8b04711195b59156e423b2b55bd60b2&amp;', capa: ''},
+{banda: 'Motorhead', titulo: 'King of Kings', src: site + 'King_of_Kings.mp3', capa: capaMotorhead},///1231232161491980441/?ex=6636354e&amp;is=6623c04e&amp;hm=711c8635d7407b1358c6d71c4c78609f00258691e730ffcf5d6c8e7b414920ed&amp;', capa: ''},
+{banda: 'Muse',  titulo:'Panic Station', src: site + 'MUSE.mp3', capa: capaMuse},///1231232287383879690/MUSE.mp3?ex=6636356c&amp;is=6623c06c&amp;hm=98561ac326ab655d030d1ed06d96320a8675bf446b06c20990ff7c94560a57ee&amp;', capa: ''},
+{banda: 'Outfield', titulo: 'Your Love', src: site + 'Your_Love.mp3', capa: capaOutfield},///1231232584193802251/?ex=66251233&amp;is=6623c0b3&amp;hm=bc7674ac258c21b17ce097094de8050a99c68bdb45a5147a6d149736b56191d0&amp;', capa: ''},
+{banda: 'Ozzy',  titulo:'Hellraiser', src: site + 'Ozzy_Ozbourne_-_Hellraiser.mp3', capa: capaOzzy},///1231232284099743805/?ex=6636356b&amp;is=6623c06b&amp;hm=dc7bd31e89f1a4b0baa2927c7557a1d773d6609193067b1e8f07540087b9f1c5&amp;', capa: ''},
+{banda: 'Ozzy',  titulo:'Mama Coming Home', src: site + 'Ozzy Osbourne -Coming Home.mp3', capa: capaOzzy},///1231232284099743805/?ex=6636356b&amp;is=6623c06b&amp;hm=dc7bd31e89f1a4b0baa2927c7557a1d773d6609193067b1e8f07540087b9f1c5&amp;', capa: ''},
+{banda: 'Ozzy',  titulo:'No More Tears', src: site + 'Ozzy Osbourne - No More Tears.mp3', capa: capaOzzy},///1231232284099743805/?ex=6636356b&amp;is=6623c06b&amp;hm=dc7bd31e89f1a4b0baa2927c7557a1d773d6609193067b1e8f07540087b9f1c5&amp;', capa: ''},
+{banda: 'Ozzy', titulo: 'Crazy Train', src: site + 'crazy-train.mp3', capa: capaOzzy},
+{banda: 'Phil Rudd', titulo: 'Sun Goes Down', src: site + 'Sun_Goes_Down.mp3', capa: capaPhilRudd},//1231198837889044480/1231202231072854118/?ex=6624f5ee&amp;is=6623a46e&amp;hm=e1489380419711f062965ee0f327e14df7b8ad2e7a0d144c4af5d7c3dc4ee800&amp;', capa: ''},
+{banda: 'Queen', titulo: 'Another One Bites the Dust', src: site + 'Another_One_Bites_the_Dust.mp3', capa: capaQueen},///1231231900111081502/Another_One_Bites_the_Dust.mp3?ex=66363510&amp;is=6623c010&amp;hm=02e3ebe0796b689bf960b966c49235d9e11ba77e633632321b2ae06ae4b7c55e&amp;', capa: ''},
+{banda: 'Queen', titulo: 'Under Pressure', src: site + 'Under_Pressure.mp3', capa: capaQueen},///1231232529839689810/?ex=66251226&amp;is=6623c0a6&amp;hm=81089d5b0489f287dc596f8f218631c31a218d759bc52a79fe34d21ffb8fa819&amp;', capa: ''},
+{banda: 'Rammstein', titulo: 'Deutschland', src: site + 'DEUTSCHLAND.mp3', capa: capaRammstein},
+{banda: 'Rammstein', titulo: 'Links 234', src: site + 'Links_2_3_4.mp3', capa:capaRammstein},
+{banda: 'Rammstein', titulo: 'Mann Gegen Mann', src: site + 'Mann_Gegen_Mann.mp3', capa: capaRammstein},///1231232286326919229/?ex=6636356c&amp;is=6623c06c&amp;hm=a4be4dcf30b325ef1a2365441561a6038fa6b642be40253308b5562735661e8e&amp;', capa: ''},
+{banda: 'Rammstein', titulo: 'Radio', src: site + 'Radio.mp3', capa: capaRammstein},
+{banda: 'Rammstein', titulo: 'Steh Auf', src: site + 'Steh_auf.mp3', capa: capaRammstein},
+{banda: 'Rammstein', titulo: 'Waidmanns Heil', src: site + 'WAIDMANNS_HEIL.mp3', capa: capaRammstein},
+{banda: 'Rammstein', titulo: 'Zeig Dich', src: site + 'ZEIG_DICH.mp3', capa: capaRammstein},
+{banda: 'Ramones', titulo: 'Have a Nice Day', src: site + 'HAVE_A_NICE_DAY.mp3', capa: capaRamones},//?ex=662511b0&amp;is=6623c030&amp;hm=1fec830103829e1494324db68b30b2ebd3d7f5074212e28224c95769bcf9398d&amp;', capa: ''},
+{banda: 'Ramones', titulo: 'Rock and Roll High School', src: site + 'Rock_and_Roll_High_School_-_Ramones.mp3', capa: capaRamones},///1231232530536071208/?ex=663635a6&amp;is=6623c0a6&amp;hm=8bf08cf2ecb510c68851f7692cafa782f4d51913da0e05036d48ff39efccb7c8&amp;', capa: ''},
+{banda: 'Ratos de Porão', titulo: 'Beber Ate Morrer', src: site + 'Beber_Ate_Morrer.mp3', capa: capaRatosdePorao},//1231198837889044480/1231202090991353969/Beber_Ate_Morrer.mp3?ex=6636194d&amp;is=6623a44d&amp;hm=33b7c9e4e4824050fb82306252f8e5c7333720c6a24d0a8057299d0d9dd7aac0&amp;', capa: ''},
+{banda: 'SlipKnot', titulo: 'Left Behind', src: site + 'Left_Behind.mp3', capa: capaSlipKnot},///1231232160019513454/?ex=6636354e&amp;is=6623c04e&amp;hm=da5821dce371c6d576a383c79870399498089f409e7a8c18a0be750a6f2bb3bb&amp;', capa: ''},
+{banda: 'Social Distortion', titulo: 'Dont Take Me For Granted', src: site + 'Dont Take Me For Granted.mp3', capa: capaSocialDistortion  },
+{banda: 'Social Distortion', titulo: 'Gimme Sweet and Lowdown', src: site + 'Gimme_Sweet_and_Lowdown_.mp3', capa: capaSocialDistortion},//1231198837889044480/1231200941630558239/Gimme_Sweet_and_Lowdown_.mp3?ex=6636183b&amp;is=6623a33b&amp;hm=db73581c15bafd2bdfb8eff7a2adb57b427853d6ec8e63582fa3b85a758692fd&amp;', capa: ''},
+{banda: 'Social Distortion', titulo: 'I Wasnt Born To Follow', src: site + 'Social Distortion - I Wasnt Born To Follow.mp3', capa: capaSocialDistortion},//1231198837889044480/1231200941630558239/Gimme_Sweet_and_Lowdown_.mp3?ex=6636183b&amp;is=6623a33b&amp;hm=db73581c15bafd2bdfb8eff7a2adb57b427853d6ec8e63582fa3b85a758692fd&amp;', capa: ''},
+{banda: 'Social Distortion', titulo: 'Reach for Sky', src: site + 'Reach_for_Sky.mp3', capa:capaSocialDistortion},
+{banda: 'Social Distortion', titulo: 'Ring of Fire', src: site + 'Ring_of_Fire.mp3', capa: capaSocialDistortion},///1231232285978923058/?ex=6636356c&amp;is=6623c06c&amp;hm=56d2d5ba023e0c2e59abb6edb79ad65b3b0d77e235a2c5fb93cb87ee2dc5fac4&amp;', capa: ''},
+{banda: 'Status Quo', titulo: 'Whatever You Want', src: site + 'Whatever_you_want.mp3', capa: capaStatusQuo},///1231232530179690606/?ex=663635a6&amp;is=6623c0a6&amp;hm=82201ad8289e412296bfeac147be0a3f404bc89ad5ced5f1e0a9dce5a7c72c68&amp;', capa: ''},
+{banda: 'Tenacious D', titulo: 'The Metal', src: site + 'the_metal.mp3', capa: capaTenaciousD},///1231232529541890100/?ex=663635a6&amp;is=6623c0a6&amp;hm=1be5d7a14708371606ca6d2def129f42120658ecd1f5062ce63072b45406461b&amp;', capa: ''},
+{banda: 'Tequila Baby', titulo: 'Num Lugar Onde Nao Existe Escuridao', src: site + 'Num_lugar_onde_nao_existe_escuridao.mp3', capa: capaTequilaBaby},//?ex=6624f55e&amp;is=6623a3de&amp;hm=c4db67cef21171704196e96d05ab80fdb3892afb37433633204e89b8b1c03781&amp;', capa: ''},
+{banda: 'The Animals', titulo: 'House of Rising Sun', src: site + 'House_of_Rising_Sun.mp3', capa: capaTheAnimals},//1231198837889044480/1231201179?ex=66361873&amp;is=6623a373&amp;hm=dc6f822b5bb3ef7647912408d1ea105f10417e05cf07b59b2ca8ac8f3f77c488&amp;', capa: ''},
+{banda: 'The Briggs', titulo: 'Harder to Stand', src: site + 'Harder_to_stand.mp3', capa: capaTheBriggs},///1231232034534457444/Harder_to_stand.mp3?ex=66363530&amp;is=6623c030&amp;hm=f793b16d8cd641c3f55839cdff298e3475ece7a2d2750e9fce69fd5ce8708a65&amp;', capa: ''},
+{banda: 'The Distillers', titulo: 'Seneca Falls', src: site + 'Seneca_Falls.mp3', capa: capaTheDistillers},//1231198837889044480/1231201954441728101/?ex=6636192c&amp;is=6623a42c&amp;hm=6a0eac0ad72d423878852da3fce89fcbbe184f991aef207d0eec4f37b32744d5&amp;', capa: ''},
+{banda: 'Toto', titulo: 'Hold The Line', src: site + 'Hold_The_Line.mp3', capa: capaToto},///1231232035604135977/?ex=66363530&amp;is=6623c030&amp;hm=01d93a12a7da3cd3b2989fdda5004e4516c257cbcd033395bf5f2f2467c00cf7&amp;', capa: ''},
+{banda: 'Van Halen',  titulo:'Cant Stop Loving You', src: site + 'Cant_Stop_Loving_You.mp3', capa: capaVanHalen},///1231231897200361502/Cant_Stop_Loving_You.mp3?ex=6636350f&amp;is=6623c00f&amp;hm=a03c6cc9851ae7d998f0321f39ead21d6be2e699d553652c0a403c293d1fdfc1&amp;', capa: ''},
+{banda: 'White Stripes', titulo: 'Dead Leeves on Dirty Ground', src: site + 'Dead_Leeves.mp3', capa: capaWhiteStripes},///1231231898198741074/Dead_Leeves.mp3?ex=6636350f&amp;is=6623c00f&amp;hm=89d8a69b5acbdfab9cccdddd492513b81503847996e9ebe4f0a569538d0a9294&amp;', capa: ''},
+{banda: 'ZZ Top', titulo: 'Gimme All Your Loving', src: site + 'Gimme_All_Your_Lovin.mp3', capa: capaZZTop},///1231232037193646080/Gimme_All_Your_Lovin.mp3?ex=66363530&amp;is=6623c030&amp;hm=b54a5c078713e1b4704050b03f2972808bdbcb26bc09a35a68f9bc703f1b3640&amp;', capa: ''},
+{banda: 'ZZ Top', titulo: 'La Granje', src: site + 'La_Granje.mp3', capa: capaZZTop},///1231232159533105215/?ex=662511ce&amp;is=6623c04e&amp;hm=3c8dfbe9ad5750b930d618b52cac8c44f82fef8507beaea27245688b0e5ced34&amp;', capa: ''},
+{banda: 'ZZ Top', titulo: 'Legs', src: site + 'Legs.mp3', capa: capaZZTop},///1231232160405655642/?ex=662511ce&amp;is=6623c04e&amp;hm=fe7531d218efc5c260ebd2e0704be9463b0a5b0455d397fa38981cf97800c7a7&amp;', capa: ''},
+{banda: 'ZZ Top', titulo: 'Planet of Woman', src: site + 'Planet_of_Women.mp3', capa: capaZZTop},///1231232284531752960/?ex=6636356b&amp;is=6623c06b&amp;hm=2c3b10ba9d208cae10259b811f508ed1d8b694a9431b9c5d6a8ec56ddc734f9f&amp;', capa: ''},
+{banda: 'ZZ Top', titulo: 'Sharp Dressed Man', src: site + 'Sharp_Dressed_Man.mp3', capa: capaZZTop},///1231232531303497840/?ex=66251226&amp;is=6623c0a6&amp;hm=049b3fe1d40e325a2d2b2bdf80c9792504f0ee19217cd01fb3eaa29cd6ba7921&amp;', capa: ''},
+
+];
+	
+	
+
+    let indiceAtual = 0;
+    let listaFiltrada = [...musicas];
+
+    const audio = document.getElementById('audio');
+    const capa = document.getElementById('capa');
+    const titulo = document.getElementById('titulo');
+    const banda = document.getElementById('banda');
+    const playlist = document.getElementById('playlist');
+    const busca = document.getElementById('busca');
+    const playBtn = document.getElementById('playBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function carregarMusica(index) {
+      const musica = listaFiltrada[index];
+      if (!musica) return;
+
+      indiceAtual = index;
+      titulo.textContent = musica.titulo;
+      banda.textContent = musica.banda;
+      audio.src = musica.src;
+      capa.src = musica.capa || capaPadrao;
+      capa.alt = `Capa de ${musica.titulo}`;
+
+      renderizarPlaylist();
+    }
+
+    function renderizarPlaylist() {
+      playlist.innerHTML = '';
+
+      listaFiltrada.forEach((musica, index) => {
+        const card = document.createElement('article');
+        card.className = 'music-card' + (index === indiceAtual ? ' active' : '');
+        card.innerHTML = `
+          <img src="${musica.capa || capaPadrao}" alt="Capa de ${musica.titulo}">
+          <div>
+            <strong>${musica.titulo}</strong>
+            <span>${musica.banda}</span>
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          carregarMusica(index);
+          audio.play();
+        });
+
+        playlist.appendChild(card);
+      });
+    }
+
+    function proximaMusica() {
+      const novoIndice = (indiceAtual + 1) % listaFiltrada.length;
+      carregarMusica(novoIndice);
+      audio.play();
+    }
+
+    function musicaAnterior() {
+      const novoIndice = (indiceAtual - 1 + listaFiltrada.length) % listaFiltrada.length;
+      carregarMusica(novoIndice);
+      audio.play();
+    }
+
+    busca.addEventListener('input', () => {
+      const termo = busca.value.toLowerCase().trim();
+
+      listaFiltrada = musicas.filter(musica =>
+        musica.titulo.toLowerCase().includes(termo) ||
+        musica.banda.toLowerCase().includes(termo)
+      );
+
+      indiceAtual = 0;
+      renderizarPlaylist();
+
+      if (listaFiltrada.length > 0) {
+        carregarMusica(0);
+      } else {
+        titulo.textContent = 'Nenhuma música encontrada';
+        banda.textContent = 'Tente buscar por outro termo';
+        audio.removeAttribute('src');
+        capa.src = capaPadrao;
+      }
+    });
+
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    audio.addEventListener('play', () => {
+      playBtn.textContent = '⏸ Pausar';
+    });
+
+    audio.addEventListener('pause', () => {
+      playBtn.textContent = '▶ Tocar';
+    });
+
+    audio.addEventListener('ended', proximaMusica);
+    nextBtn.addEventListener('click', proximaMusica);
+    prevBtn.addEventListener('click', musicaAnterior);
+
+    carregarMusica(0);
+  </script>
+</body>
+</html>
