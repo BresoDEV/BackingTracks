@@ -1,174 +1,254 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <title>Player com Bandas Ordenadas</title>
-        <style>
-    body {
-      background-color: #171717;
-      color: #ffffff;
-      min-height: 100vh;
-      font-family: sans-serif;
-      padding-bottom: 8rem;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breso Backtracks</title>
+  <style>
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
     }
 
-    #listaMusicas {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 1.5rem;
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top, #28213f 0%, #121212 45%, #070707 100%);
+      color: #fff;
+      padding: 32px 16px;
     }
 
-    h1 {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #34d399;
-    }
-
-    details {
-      background-color: #262626;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    summary {
-      cursor: pointer;
-      font-weight: 600;
-      color: #34d399;
-    }
-
-    .track {
-      display: block;
-      margin-top: 0.5rem;
-      color: white;
-      text-decoration: none;
-      cursor: pointer;
-	  background-color:transparent;
-	  border:none;
-    }
-
-    .track:hover {
-      color: #6ee7b7;
-    }
-
-    .player {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100vw;
-      background-color: #262626;
-      border-top: 1px solid #404040;
-      padding: 1rem;
-      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
-      z-index: 50;
-    }
-
-    .player-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 960px;
+    .app {
+      width: 100%;
+      max-width: 1100px;
       margin: 0 auto;
-      flex-wrap: wrap;
-      gap: 1rem;
     }
 
-    .player-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    header {
+      text-align: center;
+      margin-bottom: 32px;
     }
 
-    .player-left img {
-      width: 56px;
-      height: 56px;
-      border-radius: 0.5rem;
-      object-fit: cover;
+    header h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
     }
 
-    .song-info {
-      font-size: 0.9rem;
-    }
-
-    .song-info div:first-child {
-      font-weight: 600;
-      color: white;
-    }
-
-    .song-info div:last-child {
-      color: #a3a3a3;
-      font-size: 0.75rem;
-    }
-
-    .player-controls {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    header p {
+      color: #bdbdbd;
       font-size: 1rem;
     }
 
-    .player-controls span {
-      font-size: 0.75rem;
-      color: #a3a3a3;
+    .player-card {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(14px);
+      margin-bottom: 28px;
     }
 
-    .player-controls button {
-      background: none;
+    .cover-wrap {
+      position: relative;
+    }
+
+    .cover {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 22px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+      background: #191919;
+    }
+
+    .badge {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      background: linear-gradient(135deg, #ffce45, #ff6b00);
+      color: #111;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .track-info h2 {
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .track-info h3 {
+      color: #ffce45;
+      font-size: 1.2rem;
+      margin-bottom: 26px;
+      font-weight: 600;
+    }
+
+    audio {
+      width: 100%;
+      margin-bottom: 22px;
+      accent-color: #ffce45;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
       border: none;
-      color: #34d399;
-      font-size: 1.5rem;
       cursor: pointer;
+      padding: 13px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      color: #111;
+      background: #ffce45;
+      transition: 0.2s ease;
     }
 
-    .progress-container {
-      margin-top: 0.5rem;
-      height: 4px;
-      background-color: #525252;
-      border-radius: 4px;
-      max-width: 960px;
-      margin-left: auto;
-      margin-right: auto;
-      overflow: hidden;
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(255, 206, 69, 0.25);
     }
 
-    .progress-bar {
-      height: 4px;
-      background-color: #10b981;
-      width: 0%;
-      transition: width 0.2s ease;
+    button.secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
     }
-        </style>
-    </head>
-    <body>
-        <div id="listaMusicas">
-            <h1>🎵 Breso Backtracks</h1>
+
+    .search-box {
+      margin-bottom: 18px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .search-box input::placeholder {
+      color: #aaa;
+    }
+
+    .playlist {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .music-card {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .music-card:hover,
+    .music-card.active {
+      background: rgba(255, 206, 69, 0.14);
+      border-color: rgba(255, 206, 69, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .music-card img {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #191919;
+    }
+
+    .music-card strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .music-card span {
+      color: #bdbdbd;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 760px) {
+      .player-card {
+        grid-template-columns: 1fr;
+        padding: 18px;
+      }
+
+      .cover-wrap {
+        max-width: 320px;
+        margin: 0 auto;
+      }
+
+      .track-info {
+        text-align: center;
+      }
+
+      .controls {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>🎸 Breso Backtracks</h1>
+      <p>Backing tracks para estudar, improvisar e tocar guitarra.</p>
+    </header>
+
+    <section class="player-card">
+      <div class="cover-wrap">
+        <img id="capa" class="cover" src="" alt="Capa da música" />
+        <span class="badge">Now Playing</span>
+      </div>
+
+      <div class="track-info">
+        <h2 id="titulo">Nenhuma música</h2>
+        <h3 id="banda">Artista</h3>
+
+        <audio id="audio" controls></audio>
+
+        <div class="controls">
+          <button class="secondary" id="prevBtn">⟵ Anterior</button>
+          <button id="playBtn">▶ Tocar</button>
+          <button class="secondary" id="nextBtn">Próxima ⟶</button>
         </div>
-        <div class="player">
-            <div class="player-inner">
-                <div class="player-left">
-                    <img id="albumCover" src="https://purepng.com/public/uploads/large/purepng.com-music-iconsymbolsiconsapple-iosiosios-8-iconsios-8-721522596085b6osz.png" alt="Capa">
-                    <div class="song-info">
-                        <div id="songTitle">Nenhuma música</div>
-                        <div id="artistName">Artista</div>
-                    </div>
-                </div>
-                <div class="player-controls">
-                    <span id="currentTime">0:00</span>
-                    <button id="playPause">▶️</button>
-                    <span id="duration">0:00</span>
-                </div>
-            </div>
-            <div class="progress-container">
-                <div id="progressBar" class="progress-bar"></div>
-            </div>
-        </div>
-        <audio id="player">
-            <source src="" type="audio/mp3">
-        </audio>
-        <script>
-  var site  = "https://bresodev.github.io/BackingTracks/musicas/";
+      </div>
+    </section>
+
+    <div class="search-box">
+      <input id="busca" type="text" placeholder="Buscar por música ou banda..." />
+    </div>
+
+    <section id="playlist" class="playlist"></section>
+  </main>
+
+  <script>
+  
+      var site  = "https://bresodev.github.io/BackingTracks/musicas/";
   
   
 	var capaACDC = "https://s2-techtudo.glbimg.com/yIfA1YfWTrU631iS520fP4xyDyY=/400x0/smart/filters:strip_icc()/s.glbimg.com/po/tt2/f/original/2014/01/09/acdc-wallpaper.jpg";
@@ -224,11 +304,11 @@
 	var capaWhiteStripes = "https://i.scdn.co/image/ab6761610000e5eb70cc06de8fc28226d4743cd9";
 	var capaZZTop = "https://images.sk-static.com/images/media/profile_images/artists/307157/huge_avatar";
 	 
-  
+	 
+    const capaPadrao = 'https://placehold.co/600x600/181818/ffce45?text=Backing+Track';
+     
 
-
-  
-
+    
 
 const musicas = [
 {banda: 'AC/DC', titulo: 'Back in Black', src: site + 'back in black.mp3', capa: capaACDC},
@@ -408,101 +488,111 @@ const musicas = [
 ];
 	
 	
-	
-	
-	
-	
-	
-	
-	
 
-    const container = document.getElementById('listaMusicas');
-    const agrupadas = {};
+    let indiceAtual = 0;
+    let listaFiltrada = [...musicas];
 
-    musicas.forEach(m => {
-      if (!agrupadas[m.banda]) agrupadas[m.banda] = [];
-      agrupadas[m.banda].push(m);
-    });
+    const audio = document.getElementById('audio');
+    const capa = document.getElementById('capa');
+    const titulo = document.getElementById('titulo');
+    const banda = document.getElementById('banda');
+    const playlist = document.getElementById('playlist');
+    const busca = document.getElementById('busca');
+    const playBtn = document.getElementById('playBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
-    const bandasOrdenadas = Object.keys(agrupadas).sort((a, b) => a.localeCompare(b, 'pt', { sensitivity: 'base' }));
+    function carregarMusica(index) {
+      const musica = listaFiltrada[index];
+      if (!musica) return;
 
-    for (const banda of bandasOrdenadas) {
-      const detalhes = document.createElement('details');
-      const summary = document.createElement('summary');
-      summary.textContent = banda;
-      detalhes.appendChild(summary);
+      indiceAtual = index;
+      titulo.textContent = musica.titulo;
+      banda.textContent = musica.banda;
+      audio.src = musica.src;
+      capa.src = musica.capa || capaPadrao;
+      capa.alt = `Capa de ${musica.titulo}`;
 
-      agrupadas[banda]
-        .sort((a, b) => a.titulo.localeCompare(b.titulo, 'pt', { sensitivity: 'base' }))
-        .forEach(musica => {
-          const btn = document.createElement('button');
-          btn.className = "track";
-          btn.textContent = `🎵 ${musica.titulo}`;
-          btn.dataset.src = musica.src;
-          btn.dataset.title = musica.titulo;
-          btn.dataset.artist = musica.banda;
-          btn.dataset.cover = musica.capa;
-          detalhes.appendChild(btn);
+      renderizarPlaylist();
+    }
+
+    function renderizarPlaylist() {
+      playlist.innerHTML = '';
+
+      listaFiltrada.forEach((musica, index) => {
+        const card = document.createElement('article');
+        card.className = 'music-card' + (index === indiceAtual ? ' active' : '');
+        card.innerHTML = `
+          <img src="${musica.capa || capaPadrao}" alt="Capa de ${musica.titulo}">
+          <div>
+            <strong>${musica.titulo}</strong>
+            <span>${musica.banda}</span>
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          carregarMusica(index);
+          audio.play();
         });
 
-      container.appendChild(detalhes);
+        playlist.appendChild(card);
+      });
     }
 
-    // PLAYER
-    const player = document.getElementById('player');
-    const playPauseBtn = document.getElementById('playPause');
-    const progressBar = document.getElementById('progressBar');
-    const currentTimeEl = document.getElementById('currentTime');
-    const durationEl = document.getElementById('duration');
-    const titleEl = document.getElementById('songTitle');
-    const artistEl = document.getElementById('artistName');
-    const coverEl = document.getElementById('albumCover');
-    let isPlaying = false;
-
-    function formatTime(seconds) {
-      const min = Math.floor(seconds / 60);
-      const sec = Math.floor(seconds % 60);
-      return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    function proximaMusica() {
+      const novoIndice = (indiceAtual + 1) % listaFiltrada.length;
+      carregarMusica(novoIndice);
+      audio.play();
     }
 
-    playPauseBtn.addEventListener('click', () => {
-      if (player.src) {
-        if (isPlaying) {
-          player.pause();
-          playPauseBtn.textContent = '▶️';
-        } else {
-          player.play();
-          playPauseBtn.textContent = '⏸️';
-        }
-        isPlaying = !isPlaying;
+    function musicaAnterior() {
+      const novoIndice = (indiceAtual - 1 + listaFiltrada.length) % listaFiltrada.length;
+      carregarMusica(novoIndice);
+      audio.play();
+    }
+
+    busca.addEventListener('input', () => {
+      const termo = busca.value.toLowerCase().trim();
+
+      listaFiltrada = musicas.filter(musica =>
+        musica.titulo.toLowerCase().includes(termo) ||
+        musica.banda.toLowerCase().includes(termo)
+      );
+
+      indiceAtual = 0;
+      renderizarPlaylist();
+
+      if (listaFiltrada.length > 0) {
+        carregarMusica(0);
+      } else {
+        titulo.textContent = 'Nenhuma música encontrada';
+        banda.textContent = 'Tente buscar por outro termo';
+        audio.removeAttribute('src');
+        capa.src = capaPadrao;
       }
     });
 
-    player.addEventListener('timeupdate', () => {
-      if (!isNaN(player.duration)) {
-        const percent = (player.currentTime / player.duration) * 100;
-        progressBar.style.width = `${percent}%`;
-        currentTimeEl.textContent = formatTime(player.currentTime);
-        durationEl.textContent = formatTime(player.duration);
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
       }
     });
 
-    container.addEventListener('click', e => {
-      if (e.target.classList.contains('track')) {
-        const src = e.target.dataset.src;
-        const title = e.target.dataset.title;
-        const artist = e.target.dataset.artist;
-        const cover = e.target.dataset.cover;
-
-        player.src = src;
-        titleEl.textContent = title;
-        artistEl.textContent = artist;
-        coverEl.src = cover;
-        player.play();
-        playPauseBtn.textContent = '⏸️';
-        isPlaying = true;
-      }
+    audio.addEventListener('play', () => {
+      playBtn.textContent = '⏸ Pausar';
     });
-        </script>
-    </body>
+
+    audio.addEventListener('pause', () => {
+      playBtn.textContent = '▶ Tocar';
+    });
+
+    audio.addEventListener('ended', proximaMusica);
+    nextBtn.addEventListener('click', proximaMusica);
+    prevBtn.addEventListener('click', musicaAnterior);
+
+    carregarMusica(0);
+  </script>
+</body>
 </html>
