@@ -5,7 +5,7 @@ Player web de backing tracks com interface responsiva, busca por título ou arti
 ## Publicação
 
 
-`https://bresodev.github.io/BackingTracks/musicas/`
+https://bresodev.github.io/BackingTracks
 
 
 
